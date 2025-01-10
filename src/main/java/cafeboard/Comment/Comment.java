@@ -1,9 +1,7 @@
 package cafeboard.Comment;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import cafeboard.Post.Post;
+import jakarta.persistence.*;
 
 @Entity
 public class Comment {
@@ -13,6 +11,10 @@ public class Comment {
     private Long commentId;
 
     private String content;
+    private int commentCount;
+
+
+
 
     public Comment() {
     }
