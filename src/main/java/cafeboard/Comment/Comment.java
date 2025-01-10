@@ -13,7 +13,9 @@ public class Comment {
     private String content;
     private int commentCount;
 
-
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
 
     public Comment() {
@@ -28,11 +30,23 @@ public class Comment {
         this.content = content;
     }
 
+    public Comment(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
     public Long getCommentId() {
         return commentId;
     }
 
     public String getContent() {
         return content;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public Post getPost() {
+        return post;
     }
 }

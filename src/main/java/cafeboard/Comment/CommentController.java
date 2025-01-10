@@ -14,7 +14,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    //댓글생성
+    //댓글생성(return 타입 추후 response로 수정)
     @PostMapping("/comments")
     public void createComment(@RequestBody CommentRequest request){
         commentService.create(request);

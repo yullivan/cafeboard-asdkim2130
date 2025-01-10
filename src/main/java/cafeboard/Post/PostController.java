@@ -1,8 +1,6 @@
 package cafeboard.Post;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PostController {
@@ -14,11 +12,17 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public void createPost(@RequestBody PostRequest request){
-        postService.create(request);
+    public PostResponse createPost(@RequestBody PostRequest request){
+        Post post = postService.create(request);
 
+        return new PostResponse(post.getPostId(),
+                post.getPostTitle());
     }
 
-
+    //게시글 상세조회
+    @GetMapping("/posts/{postId}")
+    public DetailPostResponse findDetailPost (@PathVariable Long postId){
+        return postService.findDetailPost(postId);
+    }
 
 }
