@@ -1,9 +1,6 @@
 package cafeboard.Comment;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CommentController {
@@ -23,5 +20,16 @@ public class CommentController {
                 comment.getContent());
     }
 
+    @GetMapping("comments/{commentId}")
+    public CommentResponse findComment(@PathVariable Long commentId){
+        return commentService.findByCommentId(commentId);
+    }
 
+
+    @PutMapping("comments/{commentId}")
+    public CommentResponse updateComment(@PathVariable Long commentId,
+                                         @RequestBody UpdateCommentRequest updateRequest){
+
+        return commentService.update(commentId, updateRequest);
+    }
 }

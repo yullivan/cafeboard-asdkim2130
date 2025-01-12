@@ -14,7 +14,7 @@ public class Comment {
     private int commentCount;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+//    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
 
@@ -48,5 +48,9 @@ public class Comment {
 
     public Post getPost() {
         return post;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
