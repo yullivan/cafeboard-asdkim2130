@@ -12,9 +12,9 @@ public class CommentService {
     }
 
     //댓글생성
-    public void create(CommentRequest request) {
+    public Comment create(CommentRequest request) {
         Comment comment = new Comment(request.content());
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
 
     }
 }

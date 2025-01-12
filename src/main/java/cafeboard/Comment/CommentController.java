@@ -14,10 +14,13 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    //댓글생성(return 타입 추후 response로 수정)
+
     @PostMapping("/comments")
-    public void createComment(@RequestBody CommentRequest request){
-        commentService.create(request);
+    public CommentResponse createComment(@RequestBody CommentRequest request){
+        Comment comment = commentService.create(request);
+
+        return new CommentResponse(comment.getCommentId(),
+                comment.getContent());
     }
 
 
