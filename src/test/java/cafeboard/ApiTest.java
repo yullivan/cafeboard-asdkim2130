@@ -10,6 +10,7 @@ import cafeboard.Comment.UpdateCommentRequest;
 import cafeboard.Post.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,30 @@ public class ApiTest {
         assertThat(boardResponse.boardId()).isGreaterThan(0);
     }
 
+    @Test
+    public void 게시판조회테스트(){
+        //생성
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200);
+
+
+        List<BoardResponse> boardResponse = RestAssured.given().log().all()
+                .when()
+                .get("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".",  BoardResponse.class);
+
+
+        assertThat(boardResponse.size()).isEqualTo(1);
+    }
 
 
 

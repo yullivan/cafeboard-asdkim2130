@@ -2,6 +2,8 @@ package cafeboard.Board;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BoardService {
 
@@ -21,5 +23,12 @@ public class BoardService {
                                 board.getTitle());
     }
 
-
+    public List<BoardResponse> findAll (){
+        return boardRepository.findAll()
+                .stream()
+                .map(board -> new BoardResponse(
+                        board.getBoardId(),
+                        board.getTitle()))
+                .toList();
+    }
 }
