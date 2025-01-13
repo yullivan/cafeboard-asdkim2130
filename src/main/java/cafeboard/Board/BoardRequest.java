@@ -1,4 +1,4 @@
 package cafeboard.Board;
 
-public record BoardRequest() {
+public record BoardRequest(String title) {
 }

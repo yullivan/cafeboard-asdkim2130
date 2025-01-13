@@ -1,5 +1,8 @@
 package cafeboard;
 
+import cafeboard.Board.BoardRepository;
+import cafeboard.Board.BoardRequest;
+import cafeboard.Board.BoardResponse;
 import cafeboard.Comment.Comment;
 import cafeboard.Comment.CommentRequest;
 import cafeboard.Comment.CommentResponse;
@@ -28,6 +31,23 @@ public class ApiTest {
     void setUp() {
         RestAssured.port = port;
     }
+
+    @Test
+    public void 게시판생성테스트(){
+        BoardResponse boardResponse = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(BoardResponse.class);
+
+        assertThat(boardResponse.boardId()).isGreaterThan(0);
+    }
+
+
 
 
 

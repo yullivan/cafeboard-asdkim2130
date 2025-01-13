@@ -1,4 +1,5 @@
 package cafeboard.Board;
 
-public record BoardResponse() {
+public record BoardResponse(Long boardId,
+                            String title) {
 }
