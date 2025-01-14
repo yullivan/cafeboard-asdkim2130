@@ -5,6 +5,7 @@ import cafeboard.Board.BoardRepository;
 import cafeboard.Comment.Comment;
 import cafeboard.Comment.CommentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,6 +56,19 @@ public class PostService {
 //                        post.getComment()
 //                                .))
 
+    //게시글 수정
+    @Transactional
+    public PostResponse update(Long postId, PostRequest request){
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("수정할 게시글을 찾을 수 없습니다.")
+        );
 
+        post.setPostTitle(request.postTitle());
+        post.setContent(request.postContent());
+
+        return new PostResponse(post.getPostId(),
+                post.getPostTitle(),
+                post.getContent());
+    }
 
 }

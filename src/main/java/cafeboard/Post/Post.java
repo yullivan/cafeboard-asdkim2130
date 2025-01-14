@@ -61,4 +61,12 @@ public class Post {
     public List<Comment> getComment() {
         return comment;
     }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

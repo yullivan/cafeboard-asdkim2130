@@ -139,7 +139,7 @@ public class ApiTest {
                 .extract()
                 .as(BoardResponse.class);
 
-        //삭제
+        //생성1 삭제
         RestAssured.given().log().all()
                 .pathParam("boardId", boardId)
                 .when()
@@ -245,11 +245,22 @@ public class ApiTest {
 
     @Test
     public void 게시글상세조회테스트(){
-
-        PostResponse response
-                = RestAssured.given().log().all()
+        //게시판생성
+        Long boardId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new PostRequest("게시글제목", "게시글내용"))
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //게시판에 게시글 생성
+        PostResponse response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목", "게시글내용"))
                 .when()
                 .post("posts")
                 .then().log().all()
@@ -257,6 +268,7 @@ public class ApiTest {
                 .extract()
                 .as(PostResponse.class);
 
+        //게시글 상세 조회
         DetailPostResponse detailPostResponse
                 = RestAssured.given().log().all()
                 .pathParam("postId", response.postId())
@@ -269,10 +281,61 @@ public class ApiTest {
 
         assertThat(detailPostResponse.postId()).isEqualTo(response.postId());
         assertThat(detailPostResponse.postTitle()).isEqualTo("게시글제목");
-        assertThat(detailPostResponse.content()).isEqualTo("게시글내용");
+        assertThat(detailPostResponse.postContent()).isEqualTo("게시글내용");
     }
 
+    @Test
+    public void 게시글수정테스트(){
+        //게시판생성
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
 
+        //게시판에 게시글 생성
+        Long postId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목", "게시글내용"))
+                .when()
+                .post("posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("postId");
 
+        //게시글 수정
+        String updatedTitle = "수정된 게시글 제목";
+        String updatedContent = "수정된 게시글 내용";
+        RestAssured.given().log().all()
+                .pathParam("postId", postId)
+                .contentType(ContentType.JSON)
+                .body(new PostRequest(updatedTitle, updatedContent))
+                .when()
+                .put("/posts/{postId}", postId)
+                .then()
+                .log().all()
+                .statusCode(200);
 
+        //수정 조회
+        DetailPostResponse response = RestAssured.given().log().all()
+                .when()
+                .get("/posts/{postId}", postId)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .as(DetailPostResponse.class);
+
+        assertThat(response.postContent()).isEqualTo(updatedContent);
+    }
 }
+
+
+
