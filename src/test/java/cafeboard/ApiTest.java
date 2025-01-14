@@ -361,6 +361,68 @@ public class ApiTest {
                 .statusCode(200);
     }
 
+    @Test
+    public void 댓글수정테스트() {
+        //게시판 생성
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //게시글 생성
+        Long postId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목", "게시글내용"))
+                .when()
+                .post("posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("postId");
+
+
+        Long commentId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CommentRequest(postId, "댓글내용"))
+                .when()
+                .post("comments")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("commentId");
+
+        //put으로 수정
+        String updatedContent = "수정된 댓글";
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new UpdateCommentRequest(updatedContent))
+                .when()
+                .put("/comments/{commentId}", commentId)
+                .then()
+                .log().all()
+                .statusCode(200);
+
+        //get으로 조회
+        CommentResponse response = RestAssured.given().log().all()
+                .when()
+                .get("/comments/{commentId}", commentId)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .as(CommentResponse.class);
+
+        assertThat(response.content()).isEqualTo(updatedContent);
+    }
+
 
 
 
