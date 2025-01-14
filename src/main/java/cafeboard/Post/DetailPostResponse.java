@@ -1,7 +1,5 @@
 package cafeboard.Post;
 
-import cafeboard.Comment.Comment;
-
 import java.util.List;
 
 public record DetailPostResponse(Long postId,

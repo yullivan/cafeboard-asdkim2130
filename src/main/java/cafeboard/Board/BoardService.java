@@ -33,6 +33,7 @@ public class BoardService {
                 .toList();
     }
 
+    //게시판 수정
     @Transactional
     public BoardResponse update(Long boardId, BoardRequest request){
         Board board = boardRepository.findById(boardId).orElseThrow(
@@ -45,6 +46,7 @@ public class BoardService {
                 board.getTitle());
     }
 
+    //게시판 조회
     @Transactional
     public void delete(Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(
@@ -52,8 +54,6 @@ public class BoardService {
         );
 
         boardRepository.delete(board);
-
     }
-
 
 }

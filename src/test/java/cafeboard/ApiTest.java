@@ -1,13 +1,12 @@
 package cafeboard;
 
-import cafeboard.Board.BoardRepository;
+
 import cafeboard.Board.BoardRequest;
 import cafeboard.Board.BoardResponse;
 import cafeboard.Comment.*;
 import cafeboard.Post.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +44,7 @@ public class ApiTest {
         assertThat(boardResponse.boardId()).isGreaterThan(0);
     }
 
+
     @Test
     public void 게시판조회테스트(){
         //생성
@@ -69,6 +69,7 @@ public class ApiTest {
 
         assertThat(boardResponse.size()).isEqualTo(1);
     }
+
 
     @Test
     public void 게시판수정테스트() {
@@ -110,6 +111,7 @@ public class ApiTest {
         assertThat(boardResponse).anyMatch(boardResponse1 -> boardResponse1.title().equals("수정된 제목"));
 
     }
+
 
     @Test
     public void 게시판삭제테스트(){
@@ -155,9 +157,8 @@ public class ApiTest {
                 .getList(".", BoardResponse.class);
 
         assertThat(boardList).anyMatch(boardResponse -> !boardResponse.title().equals("게시판 제목1"));
-
-
     }
+
 
     @Test
     public void 게시글생성테스트(){
@@ -181,8 +182,8 @@ public class ApiTest {
                 .post("posts")
                 .then().log().all()
                 .statusCode(200);
-
     }
+
 
     @Test
     public void 게시글상세조회테스트(){
@@ -224,6 +225,7 @@ public class ApiTest {
         assertThat(detailPostResponse.postTitle()).isEqualTo("게시글제목");
         assertThat(detailPostResponse.postContent()).isEqualTo("게시글내용");
     }
+
 
     @Test
     public void 게시글목록조회테스트(){
@@ -331,6 +333,7 @@ public class ApiTest {
         assertThat(response.postContent()).isEqualTo(updatedContent);
     }
 
+
     @Test
     public void 게시글삭제테스트(){
         //게시판 생성
@@ -388,10 +391,9 @@ public class ApiTest {
                 .getList(".", PostListResponse.class);
 
         assertThat(listResponse).anyMatch(Response -> !Response.postTitle().equals("게시글제목1"));
-
-
-
     }
+
+
     @Test
     public void 댓글생성테스트(){
         //게시판 생성
@@ -427,6 +429,7 @@ public class ApiTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
 
     @Test
     public void 댓글수정테스트() {
@@ -488,6 +491,7 @@ public class ApiTest {
 
         assertThat(response.content()).isEqualTo(updatedContent);
     }
+
 
     @Test
     public void 댓글삭제테스트(){

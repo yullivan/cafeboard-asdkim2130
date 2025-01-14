@@ -4,9 +4,7 @@ import cafeboard.Post.Post;
 import cafeboard.Post.PostRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -67,6 +65,5 @@ public class CommentService {
                 .map(comment -> new CommentsListResponse(comment.getContent()))
                 .toList();
     }
-
 
 }

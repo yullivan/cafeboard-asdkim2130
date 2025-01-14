@@ -33,8 +33,6 @@ public class Post {
         this.content = content;
     }
 
-
-
     public Post(String postTitle, String content) {
         this.postTitle = postTitle;
         this.content = content;

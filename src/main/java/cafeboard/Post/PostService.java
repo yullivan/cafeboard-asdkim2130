@@ -5,7 +5,6 @@ import cafeboard.Board.BoardRepository;
 import cafeboard.Comment.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -21,6 +20,7 @@ public class PostService {
         this.commentRepository = commentRepository1;
     }
 
+    //게시글 생성
     public Post create (CreatePostRequest createRequest){
         Board board = boardRepository.findById(createRequest.boardId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시판입니다. 게시글을 생성할 수 없습니다.")
@@ -49,13 +49,6 @@ public class PostService {
         );
     }
 
-//    public List<PostsResponse> findAll(){
-//        postRepository.findAll()
-//                .stream()
-//                .map(post -> new PostsResponse(post.getPostId(),
-//                        post.getPostTitle(),
-//                        post.getComment()
-//                                .))
 
     //게시글 수정
     @Transactional
@@ -98,8 +91,5 @@ public class PostService {
                 .toList();
         return findAllPostsList;
     }
-
-
-
 
 }
