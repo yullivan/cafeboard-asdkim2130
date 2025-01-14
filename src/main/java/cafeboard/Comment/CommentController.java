@@ -2,6 +2,8 @@ package cafeboard.Comment;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class CommentController {
 
@@ -37,6 +39,11 @@ public class CommentController {
     public void deleteComment(@PathVariable Long commentId){
 
         commentService.delete(commentId);
+    }
+
+    @GetMapping("commentslist")
+    public List<CommentsListResponse> findAllCommentsList(){
+        return commentService.findAll();
     }
 
 }

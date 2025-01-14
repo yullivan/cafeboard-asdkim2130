@@ -3,10 +3,7 @@ package cafeboard;
 import cafeboard.Board.BoardRepository;
 import cafeboard.Board.BoardRequest;
 import cafeboard.Board.BoardResponse;
-import cafeboard.Comment.Comment;
-import cafeboard.Comment.CommentRequest;
-import cafeboard.Comment.CommentResponse;
-import cafeboard.Comment.UpdateCommentRequest;
+import cafeboard.Comment.*;
 import cafeboard.Post.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -530,6 +527,17 @@ public class ApiTest {
                 .jsonPath()
                 .getLong("commentId");
 
+        //댓글생성2
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CommentRequest(postId, "댓글내용2"))
+                .when()
+                .post("comments")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(CommentResponse.class);
+
         //댓글 삭제
         RestAssured.given().log().all()
                 .pathParam("commentId", commentId)
@@ -539,19 +547,18 @@ public class ApiTest {
                 .statusCode(200);
 
         //삭제 조회
-        CommentResponse response = RestAssured.given().log().all()
+        List<CommentsListResponse> commentResponses = RestAssured.given().log().all()
                 .when()
-                .get("/comments/{commentId}", commentId)
+                .get("/commentslist")
                 .then()
                 .log().all()
-                .statusCode(500)  //IllegalArgumentException으로 에러 출력, List<comment> 조회 구현 후 다시 확인 필요
+                .statusCode(200)
                 .extract()
-                .as(CommentResponse.class);
+                .jsonPath()
+                .getList(".", CommentsListResponse.class);
 
+        assertThat(commentResponses).anyMatch(Response -> !Response.content().equals("댓글내용"));
     }
-
-
-
 }
 
 

@@ -60,4 +60,13 @@ public class CommentService {
 
         commentRepository.delete(comment);
     }
+
+    public List<CommentsListResponse> findAll(){
+        return commentRepository.findAll()
+                .stream()
+                .map(comment -> new CommentsListResponse(comment.getContent()))
+                .toList();
+    }
+
+
 }
