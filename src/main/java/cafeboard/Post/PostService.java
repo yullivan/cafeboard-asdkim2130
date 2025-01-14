@@ -71,4 +71,13 @@ public class PostService {
                 post.getContent());
     }
 
+    // 게시글삭제
+    @Transactional
+    public void delete(Long postId){
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("삭제할 게시글을 찾을 수 없습니다.")
+        );
+
+        postRepository.delete(post);
+    }
 }

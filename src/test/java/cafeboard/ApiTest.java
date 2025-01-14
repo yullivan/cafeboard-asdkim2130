@@ -335,6 +335,57 @@ public class ApiTest {
 
         assertThat(response.postContent()).isEqualTo(updatedContent);
     }
+
+    @Test
+    public void 게시글삭제테스트(){
+        //게시판 생성
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //게시글1 생성
+                Long postId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목1", "게시글내용1"))
+                .when()
+                .post("posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("postId");
+
+        //게시글1 삭제
+        RestAssured.given().log().all()
+                .pathParam("postId", postId)
+                .when()
+                .delete("/posts/{postId}")
+                .then().log().all()
+                .statusCode(200);
+
+        //삭제조회
+        DetailPostResponse response = RestAssured.given().log().all()
+                .when()
+                .get("/posts/{postId}", postId)
+                .then()
+                .log().all()
+                .statusCode(500)  //IllegalArgumentException으로 에러 출력, List<post> 조회구현 후 다시 확인 필요
+                .extract()
+                .as(DetailPostResponse.class);
+
+
+
+    }
+
+
+
 }
 
 
