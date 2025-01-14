@@ -229,6 +229,60 @@ public class ApiTest {
     }
 
     @Test
+    public void 게시글목록조회테스트(){
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //게시판에 게시글 생성
+        Long postId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목", "게시글내용"))
+                .when()
+                .post("posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("postId");
+
+        //댓글생성
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CommentRequest(postId, "댓글내용"))
+                .when()
+                .post("comments")
+                .then().log().all()
+                .statusCode(200);
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CommentRequest(postId, "댓글내용2"))
+                .when()
+                .post("comments")
+                .then().log().all()
+                .statusCode(200);
+
+        //목록조회
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("postslist")
+                .then().log().all()
+                .statusCode(200)
+                .extract().
+                jsonPath()
+                .getList(".", PostListResponse.class);
+    }
+
+
+    @Test
     public void 게시글수정테스트(){
         //게시판생성
         Long boardId = RestAssured.given().log().all()

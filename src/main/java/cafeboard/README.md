@@ -40,16 +40,26 @@
 
 ## 게시글 목록조회
 ### method : GetMapping
-### /posts
+### /postslist
 ### http://localhost8080/posts
 ````
-PostResponse
+PostListResponse
 [
-    {    
-        "postId" : 1
-        "postTitle" : "게시글 제목"
-        "commentsCount" : 1
-    }
+  {
+    "postId": 1,
+    "postTitiel": "게시글 제목",
+    "commentCount": 1
+  },
+  {
+    "postId": 2,
+    "postTitiel": "게시글 제목2",
+    "commentCount": 10
+  },
+  {
+    "postId": 3,
+    "postTitiel": "게시글 제목3",
+    "commentCount": 5
+  }
 ]
 ````
 

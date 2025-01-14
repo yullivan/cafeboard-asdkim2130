@@ -2,6 +2,8 @@ package cafeboard.Post;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class PostController {
 
@@ -33,9 +35,16 @@ public class PostController {
         return postService.update(postId, request);
     }
 
+    //게시글삭제
     @DeleteMapping("/posts/{postId}")
     public void deletePost(@PathVariable Long postId){
         postService.delete(postId);
+    }
+
+    //게시글 목록조회
+    @GetMapping("postslist")
+    public List<PostListResponse>getAllPostsList(){
+        return postService.findAllPosts();
     }
 
 }

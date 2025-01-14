@@ -2,7 +2,6 @@ package cafeboard.Post;
 
 import cafeboard.Board.Board;
 import cafeboard.Board.BoardRepository;
-import cafeboard.Comment.Comment;
 import cafeboard.Comment.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +13,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
-    public PostService(PostRepository postRepository, CommentRepository commentRepository, BoardRepository boardRepository) {
+    public PostService(PostRepository postRepository, CommentRepository commentRepository, BoardRepository boardRepository, CommentRepository commentRepository1) {
         this.postRepository = postRepository;
         this.boardRepository = boardRepository;
+        this.commentRepository = commentRepository1;
     }
 
     public Post create (CreatePostRequest createRequest){
@@ -80,4 +81,25 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    //게시글 목록 조회(댓글 수 포함)
+    public List<PostListResponse> findAllPosts() {
+
+        List<PostListResponse> findAllPostsList = postRepository.findAll()
+                .stream()
+                .map(post -> {
+                    int commentCount = commentRepository.countByPost_PostId(post.getPostId());
+
+                    return new PostListResponse(
+                            post.getPostId(),
+                            post.getPostTitle(),
+                            new PostListResponse.Comment(commentCount));
+                })
+                .toList();
+        return findAllPostsList;
+    }
+
+
+
+
 }
