@@ -360,6 +360,17 @@ public class ApiTest {
                 .jsonPath()
                 .getLong("postId");
 
+        //게시글2 생성
+        PostResponse response1 = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목2", "게시글내용2"))
+                .when()
+                .post("posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(PostResponse.class);
+
         //게시글1 삭제
         RestAssured.given().log().all()
                 .pathParam("postId", postId)
@@ -369,14 +380,19 @@ public class ApiTest {
                 .statusCode(200);
 
         //삭제조회
-        DetailPostResponse response = RestAssured.given().log().all()
+        List<PostListResponse> listResponse = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
                 .when()
-                .get("/posts/{postId}", postId)
-                .then()
-                .log().all()
-                .statusCode(500)  //IllegalArgumentException으로 에러 출력, List<post> 조회구현 후 다시 확인 필요
-                .extract()
-                .as(DetailPostResponse.class);
+                .get("postslist")
+                .then().log().all()
+                .statusCode(200)
+                .extract().
+                jsonPath()
+                .getList(".", PostListResponse.class);
+
+        assertThat(listResponse).anyMatch(Response -> !Response.postTitle().equals("게시글제목1"));
+
+
 
     }
     @Test
