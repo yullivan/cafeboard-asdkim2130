@@ -387,7 +387,6 @@ public class ApiTest {
                 .jsonPath()
                 .getLong("postId");
 
-
         Long commentId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new CommentRequest(postId, "댓글내용"))
@@ -423,6 +422,63 @@ public class ApiTest {
         assertThat(response.content()).isEqualTo(updatedContent);
     }
 
+    @Test
+    public void 댓글삭제테스트(){
+        //게시판 생성
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //게시글 생성
+        Long postId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePostRequest(boardId, "게시글제목", "게시글내용"))
+                .when()
+                .post("posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("postId");
+
+        //댓글생성
+        Long commentId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CommentRequest(postId, "댓글내용"))
+                .when()
+                .post("comments")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("commentId");
+
+        //댓글 삭제
+        RestAssured.given().log().all()
+                .pathParam("commentId", commentId)
+                .when()
+                .delete("/comments/{commentId}")
+                .then().log().all()
+                .statusCode(200);
+
+        //삭제 조회
+        CommentResponse response = RestAssured.given().log().all()
+                .when()
+                .get("/comments/{commentId}", commentId)
+                .then()
+                .log().all()
+                .statusCode(500)  //IllegalArgumentException으로 에러 출력, List<comment> 조회 구현 후 다시 확인 필요
+                .extract()
+                .as(CommentResponse.class);
+
+    }
 
 
 
