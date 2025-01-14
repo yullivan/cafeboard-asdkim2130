@@ -14,7 +14,7 @@ public class Comment {
     private int commentCount;
 
     @ManyToOne
-//    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
 
@@ -24,6 +24,11 @@ public class Comment {
     public Comment(Long commentId, String content) {
         this.commentId = commentId;
         this.content = content;
+    }
+
+    public Comment(String content, Post post) {
+        this.content = content;
+        this.post = post;
     }
 
     public Comment(String content) {

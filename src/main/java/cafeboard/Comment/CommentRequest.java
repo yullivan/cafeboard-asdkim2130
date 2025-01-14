@@ -1,4 +1,5 @@
 package cafeboard.Comment;
 
-public record CommentRequest(String content) {
+public record CommentRequest(Long postId,
+                             String content) {
 }

@@ -24,7 +24,7 @@ public class Post {
     private Board board;
 
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comment;
 
     public Post(Long postId, String postTitle, String content) {

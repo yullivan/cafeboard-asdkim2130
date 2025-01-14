@@ -22,7 +22,7 @@ public class PostService {
 
     public Post create (CreatePostRequest createRequest){
         Board board = boardRepository.findById(createRequest.boardId()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 게시판입니다.")
+                () -> new IllegalArgumentException("존재하지 않는 게시판입니다. 게시글을 생성할 수 없습니다.")
         );
 
         Post post = new Post(createRequest.postTitle(),

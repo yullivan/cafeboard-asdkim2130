@@ -1,5 +1,7 @@
 package cafeboard.Comment;
 
+import cafeboard.Post.Post;
+import cafeboard.Post.PostRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +12,20 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
     }
 
     //댓글생성
     public Comment create(CommentRequest request) {
-        Comment comment = new Comment(request.content());
+        Post post = postRepository.findById(request.postId()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시글입니다. 댓글을 생성할 수 없습니다.")
+        );
+
+        Comment comment = new Comment(request.content(), post);
         return commentRepository.save(comment);
     }
 
