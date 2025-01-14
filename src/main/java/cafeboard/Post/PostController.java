@@ -12,7 +12,7 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public PostResponse createPost(@RequestBody PostRequest request){
+    public PostResponse createPost(@RequestBody CreatePostRequest request){
         Post post = postService.create(request);
 
         return new PostResponse(post.getPostId(),

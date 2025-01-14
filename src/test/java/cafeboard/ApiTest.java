@@ -220,9 +220,22 @@ public class ApiTest {
 
     @Test
     public void 게시글생성테스트(){
+        //게시판생성
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //게시판에 게시글 생성
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new PostRequest("게시글제목", "게시글내용"))
+                .body(new CreatePostRequest(boardId, "게시글제목",  "게시글내용"))
                 .when()
                 .post("posts")
                 .then().log().all()

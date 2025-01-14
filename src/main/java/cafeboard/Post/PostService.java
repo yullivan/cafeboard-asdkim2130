@@ -1,5 +1,7 @@
 package cafeboard.Post;
 
+import cafeboard.Board.Board;
+import cafeboard.Board.BoardRepository;
 import cafeboard.Comment.Comment;
 import cafeboard.Comment.CommentRepository;
 import org.springframework.stereotype.Service;
@@ -10,15 +12,21 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
 
-    public PostService(PostRepository postRepository, CommentRepository commentRepository) {
+    public PostService(PostRepository postRepository, CommentRepository commentRepository, BoardRepository boardRepository) {
         this.postRepository = postRepository;
+        this.boardRepository = boardRepository;
     }
 
-    public Post create (PostRequest request){
-        Post post = new Post(
-                request.postTitle(),
-                request.postContent());
+    public Post create (CreatePostRequest createRequest){
+        Board board = boardRepository.findById(createRequest.boardId()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시판입니다.")
+        );
+
+        Post post = new Post(createRequest.postTitle(),
+                createRequest.postContent(),
+                board);
 
         return postRepository.save(post);
     }

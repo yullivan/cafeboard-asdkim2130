@@ -40,6 +40,12 @@ public class Post {
         this.content = content;
     }
 
+    public Post(String postTitle, String content, Board board) {
+        this.postTitle = postTitle;
+        this.content = content;
+        this.board = board;
+    }
+
     public Long getPostId() {
         return postId;
     }
