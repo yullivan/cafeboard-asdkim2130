@@ -36,7 +36,7 @@ public class BoardService {
     @Transactional
     public BoardResponse update(Long boardId, BoardRequest request){
         Board board = boardRepository.findById(boardId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("수정할 게시판이 존재하지 않습니다.")
         );
 
         board.setTitle(request.title());
@@ -45,6 +45,15 @@ public class BoardService {
                 board.getTitle());
     }
 
+    @Transactional
+    public void delete(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new IllegalArgumentException("삭제할 게시판이 존재하지 않습니다.")
+        );
+
+        boardRepository.delete(board);
+
+    }
 
 
 }

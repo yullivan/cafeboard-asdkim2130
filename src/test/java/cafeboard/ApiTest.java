@@ -115,6 +115,54 @@ public class ApiTest {
     }
 
     @Test
+    public void 게시판삭제테스트(){
+        //생성1
+        Long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목1"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
+
+        //생성2
+        BoardResponse board2 = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목2"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(BoardResponse.class);
+
+        //삭제
+        RestAssured.given().log().all()
+                .pathParam("boardId", boardId)
+                .when()
+                .delete("/boards/{boardId}")
+                .then().log().all()
+                .statusCode(200);
+
+        //삭제조회
+        List<BoardResponse> boardList = RestAssured.given().log().all()
+                .when()
+                .get("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", BoardResponse.class);
+
+        assertThat(boardList).anyMatch(boardResponse -> !boardResponse.title().equals("게시판 제목1"));
+
+
+    }
+
+    @Test
     public void 댓글생성테스트(){
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
