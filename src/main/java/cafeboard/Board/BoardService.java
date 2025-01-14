@@ -1,6 +1,7 @@
 package cafeboard.Board;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,4 +32,19 @@ public class BoardService {
                         board.getTitle()))
                 .toList();
     }
+
+    @Transactional
+    public BoardResponse update(Long boardId, BoardRequest request){
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다.")
+        );
+
+        board.setTitle(request.title());
+
+        return new BoardResponse(board.getBoardId(),
+                board.getTitle());
+    }
+
+
+
 }

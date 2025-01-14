@@ -73,9 +73,46 @@ public class ApiTest {
         assertThat(boardResponse.size()).isEqualTo(1);
     }
 
+    @Test
+    public void 게시판수정테스트() {
+        //생성
+        long boardId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BoardRequest("게시판 제목"))
+                .when()
+                .post("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("boardId");
 
+        //수정
+        String updatedTitle = "수정된 제목";
 
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .pathParam("boardId", boardId)
+                .body(new BoardRequest(updatedTitle))
+                .when()
+                .put("/boards/{boardId}")
+                .then()
+                .log().all()
+                .statusCode(200);
 
+        //수정 조회
+        List<BoardResponse> boardResponse = RestAssured.given().log().all()
+                .when()
+                .get("boards")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", BoardResponse.class);
+
+        assertThat(boardResponse).anyMatch(boardResponse1 -> boardResponse1.title().equals("수정된 제목"));
+
+    }
 
     @Test
     public void 댓글생성테스트(){

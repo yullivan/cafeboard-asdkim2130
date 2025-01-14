@@ -1,9 +1,6 @@
 package cafeboard.Board;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +23,12 @@ public class BoardController {
     public List<BoardResponse> findAllBoards(){
         return boardService.findAll();
     }
+
+    @PutMapping("boards/{boardId}")
+    public BoardResponse updateBoard (@PathVariable Long boardId,
+                                     @RequestBody BoardRequest request){
+
+        return boardService.update(boardId, request);
+    }
+
 }
