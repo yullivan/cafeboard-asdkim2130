@@ -1,5 +1,6 @@
 package cafeboard.Post;
 
+import cafeboard.Board.Board;
 import cafeboard.Comment.Comment;
 import jakarta.persistence.*;
 
@@ -18,8 +19,13 @@ public class Post {
     public Post() {
     }
 
+    @ManyToOne
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
+
+
     @OneToMany(mappedBy = "post")
-    public List<Comment> comment;
+    private List<Comment> comment;
 
     public Post(Long postId, String postTitle, String content) {
         this.postId = postId;

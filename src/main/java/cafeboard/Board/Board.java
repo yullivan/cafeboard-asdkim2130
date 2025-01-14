@@ -4,6 +4,8 @@ import cafeboard.Post.Post;
 import jakarta.persistence.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Entity
 public class Board {
 
@@ -11,7 +13,10 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    public String title;
+    private String title;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> post;
 
 
     public Board() {
@@ -37,5 +42,9 @@ public class Board {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Post> getPost() {
+        return post;
     }
 }
